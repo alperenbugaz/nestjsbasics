@@ -1,98 +1,58 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# İlk NextJS Uygulamam
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### Proje Klasör Yapısı ve Dosyalar
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- **src/** → Projenin ana kaynak kodlarının bulunduğu klasör.  
+- **main.ts** → Uygulama bu dosya üzerinden başlar. İçindeki `bootstrap` fonksiyonu ile `AppModule` yüklenir ve uygulamanın çalışacağı port belirlenebilir.  
+- **app.module.ts** → Uygulamanın modüllerini yöneten ana modül dosyasıdır.  
+- **app.controller.ts** → Uygulamanın controller (yönlendirme) katmanını barındırır.  
+- **app.service.ts** → Uygulamanın service (iş mantığı) katmanını barındırır. Controller tarafından çağrılır ve gerekli iş kuralları burada uygulanır.  
+- **app.controller.spec.ts** → `app.controller` dosyasının testlerini içerir. Unit test (birim testi) amacıyla kullanılır. Jest test framework’ü ile birlikte çalışır.  
+- **eslint.config.js** → Projede kodlama standartlarını ve kurallarını belirleyen ESLint yapılandırma dosyasıdır. Kodun düzenli, hatasız ve tutarlı yazılmasına yardımcı olur.  
+- **package.json** → Projenin bağımlılıklarını, scriptlerini, proje adını, sürümünü ve metadata bilgilerini barındıran dosyadır. `npm install` veya `yarn install` komutu bu dosyaya bakarak gerekli paketleri indirir.  
+- **tsconfig.json** → TypeScript derleyici ayarlarını tutar. Derleme sırasında hangi dosyaların dahil edileceği, hangi standartların kullanılacağı ve JavaScript çıktısının nasıl üretileceği gibi ayarları içerir.  
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Yaşam Döngüsü (Lifecycle)
 
-## Project setup
+NestJS uygulamasının yaşam döngüsü, uygulamanın başlatılmasından kapanmasına kadar olan adımları içerir:
 
-```bash
-$ npm install
-```
+1. **Bootstrap (Başlatma)**  
+   - `main.ts` içerisindeki `bootstrap()` fonksiyonu çalıştırılır.  
+   - `NestFactory.create(AppModule)` ile uygulama oluşturulur ve gerekli modüller yüklenir.  
 
-## Compile and run the project
+2. **Dependency Injection (Bağımlılıkların Yüklenmesi)**  
+   - `AppModule` içindeki tüm bağımlılıklar (service, provider vs.) initialize edilir.  
+   - NestJS IoC container sayesinde bağımlılıklar otomatik olarak çözülür.  
 
-```bash
-# development
-$ npm run start
+3. **Routing & Controller Mapping (Yönlendirme ve Controller Eşleştirme)**  
+   - Controller’lar taranır ve endpoint’ler route’lara bağlanır.  
+   - Örneğin `app.controller.ts` içindeki `/` GET isteği `/` route’una eşlenir.  
 
-# watch mode
-$ npm run start:dev
+4. **Middleware / Pipes / Guards / Interceptors**  
+   - Uygulama çalışırken istekler middleware ve guard’lardan geçer.  
+   - Pipes ile veri doğrulama ve dönüştürme yapılır, Interceptors ile ek işlemler uygulanabilir.  
 
-# production mode
-$ npm run start:prod
-```
+5. **Application Running (Uygulama Çalışıyor)**  
+   - Uygulama belirtilen portta çalışır ve gelen HTTP isteklerine yanıt verir.  
 
-## Run tests
+6. **Shutdown / Cleanup (Kapanış ve Temizlik)**  
+   - Uygulama kapatıldığında `OnModuleDestroy` veya `OnApplicationShutdown` hook’ları çalıştırılabilir.  
+   - Bağlantılar (DB, Cache vs.) temizlenir ve uygulama güvenli şekilde kapanır.
 
-```bash
-# unit tests
-$ npm run test
 
-# e2e tests
-$ npm run test:e2e
+   ## Temel Komutlar
 
-# test coverage
-$ npm run test:cov
-```
+Bu bölümde projenin geliştirme ve çalıştırma süreçlerinde sık kullanılan npm komutları listelenmiştir:
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+| Komut | Açıklama |
+|-------|----------|
+| `npm install` veya `yarn install` | `package.json` içindeki bağımlılıkları indirir ve projeyi hazırlar. |
+| `npm run start` | Uygulamayı production modda başlatır. Varsayılan olarak `dist` klasöründeki derlenmiş kod çalıştırılır. |
+| `npm run start:dev` | Uygulamayı development modda başlatır ve kod değişikliklerini otomatik olarak izler (Hot Reload). |
+| `npm run start:debug` | Uygulamayı debug modunda başlatır. IDE üzerinden breakpoint ile debug yapılabilir. |
+| `npm run build` | TypeScript kodunu JavaScript’e derler ve `dist` klasörüne kaydeder. |
+| `npm run lint` | Kodun ESLint kurallarına uygunluğunu kontrol eder ve olası hataları listeler. |
+| `npm run test` | Projedeki unit testleri çalıştırır. |
+| `npm run test:watch` | Testleri izleme modunda çalıştırır; dosya değişikliklerinde otomatik test çalıştırır. |
+| `npm run test:cov` | Test kapsamını (coverage) raporlar. |
